@@ -1,1 +1,1 @@
-# Text-Manipulation
+# Text-ManipulationFunctions to mess with Strings.
