@@ -1,8 +1,12 @@
 /**
  * Created by Zachary on 6/17/2017.
  */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Text_Utilities {
     public static String reverse(String input) {
@@ -65,5 +69,33 @@ public class Text_Utilities {
             total += entry.getValue();
         }
         return total;
+    }
+
+    private static final int maxChunkSize = 1000000;
+
+    public static void generateRandomFile(long numBytes, String alphabet){
+        DecimalFormat decimalFormat = new DecimalFormat("0000000000000");
+        String fileName = decimalFormat.format(numBytes) + ".txt";
+        Random random = new Random();
+        try {
+            FileWriter fileWriter = new FileWriter(fileName, false);
+            long currentByte = 0;
+            while (currentByte < numBytes) {
+                long remainingBytes = numBytes - currentByte;
+                int chunkSize = (remainingBytes >= maxChunkSize) ? maxChunkSize : (int) remainingBytes;
+                char[] currentChunk = new char[chunkSize];
+                for (int i = 0; i < chunkSize; i++) {
+                    currentChunk[i] = alphabet.charAt(random.nextInt(alphabet.length()));
+                }
+                fileWriter.write(currentChunk);
+                currentByte += chunkSize;
+            }
+            fileWriter.close();
+        }
+        catch (IOException e) {
+            System.err.println(e.getStackTrace());
+            System.err.println("Error writing to: " + fileName);
+            System.exit(1);
+        }
     }
 }
